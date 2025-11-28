@@ -1,15 +1,18 @@
-# app/main.py
 from fastapi import FastAPI
-from app.routes import hello, tools, public_api, more_endpoints_soon
+from fastapi.staticfiles import StaticFiles
+from app.routes import hello, tools, public_api
 
-app = FastAPI(
-    title="Nexus API 🔑",
-    description="Your custom multi-endpoint API",
-    version="1.0.0"
-)
+app = FastAPI(title="Nexus API 🔑")
 
 # Include routers
 app.include_router(hello.router)
 app.include_router(tools.router)
 app.include_router(public_api.router)
-app.include_router(more_endpoints_soon.router)
+
+# Root endpoint
+@app.get("/")
+def root():
+    return {"status": "Nexus API 🔑 is running"}
+
+# Serve static files
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
